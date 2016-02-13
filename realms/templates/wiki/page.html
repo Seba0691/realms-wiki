@@ -1,4 +1,9 @@
 {% extends 'layout.html' %}
+
+{% block sidebar %}
+   <div id="page-sidebar"></div>
+{% endblock %}
+
 {% block page_menu %}
   <div class="controls pull-right">
     <a class="btn btn-default btn-sm" href="{{ url_for('wiki.edit', name=name) }}">Edit</a>
@@ -29,6 +34,7 @@
         {% endfor %}
       {% endif %}
       $("#page-content").html(MDR.convert({{ page.data|tojson|safe }})).show();
+      $("#page-sidebar").html(MDR.convert({{ sidebar.data|tojson|safe }})).show();
     });
   </script>
 {% endblock %}

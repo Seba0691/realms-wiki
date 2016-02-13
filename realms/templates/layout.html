@@ -84,22 +84,25 @@
 
     <!-- Page Menu -->
     <div class="container">
-      <div id="main-body">
-     {% with messages = get_flashed_messages(with_categories=True) %}
-      {% if messages %}
-        {% for category, message in messages %}
-            {% if category == 'message' %}
-                {% set category = "info" %}
-            {% endif %}
-          <div class='alert alert-{{ category }}'>
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-              {{ message }}
-          </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-    {% block body %}{% endblock %}
-      </div>
+
+    <div class="col-md-2">{% block sidebar %}{% endblock %}</div>
+    
+    <div id="main-body" class="col-md-10">
+       {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+          {% for category, message in messages %}
+              {% if category == 'message' %}
+                  {% set category = "info" %}
+              {% endif %}
+            <div class='alert alert-{{ category }}'>
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block body %}{% endblock %}
+    </div>
     </div>
 
     <script>
