@@ -203,6 +203,16 @@ def page_write(name):
     return dict(sha=sha)
 
 
+@blueprint.route("/buildside")
+def build_side(path = "/"):
+    items = g.current_wiki.get_sub_index("sub1")
+    sidebar = []
+    for item in items :
+        sidebar.append(dict( name = item['name'].split("/")[-1], link = item['name']))
+    return sidebar
+
+
+
 @blueprint.route("/", defaults={'name': 'home'})
 @blueprint.route("/<path:name>")
 def page(name):
@@ -221,3 +231,5 @@ def page(name):
         return render_template('wiki/page.html', name=cname, page=data, sidebar=sidebar, partials=data.get('partials'))
     else:
         return redirect(url_for('wiki.create', name=cname))
+
+

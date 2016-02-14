@@ -266,6 +266,14 @@ class Wiki(HookMixin):
 
         return rv
 
+    def get_sub_index(self, path="/"):
+        index = self.get_index()
+
+        if path is not "/":
+            index = filter(lambda x: path in x['name'], index)
+
+        return index 
+
     def get_history(self, name, limit=100):
         """Get page history.
 
