@@ -214,11 +214,10 @@ def page(name):
         return redirect(url_for('wiki.page', name=cname))
 
     data = g.current_wiki.get_page(cname)
+    # get the sidebar for this level if any
     sidebar = g.current_wiki.get_page("sidebar")
 
-    if data and sidebar:
+    if data:
         return render_template('wiki/page.html', name=cname, page=data, sidebar=sidebar, partials=data.get('partials'))
-    elif data : 
-        return render_template('wiki/page.html', name=cname, page=data, partials=data.get('partials'))
     else:
         return redirect(url_for('wiki.create', name=cname))

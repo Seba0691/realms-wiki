@@ -34,7 +34,10 @@
         {% endfor %}
       {% endif %}
       $("#page-content").html(MDR.convert({{ page.data|tojson|safe }})).show();
-      $("#page-sidebar").html(MDR.convert({{ sidebar.data|tojson|safe }})).show();
+      {% if sidebar %}
+         //if we have a sidebar than render it
+         $("#page-sidebar").html(MDR.convert({{ sidebar.data|tojson|safe }})).show();
+      {% endif %}
     });
   </script>
 {% endblock %}
