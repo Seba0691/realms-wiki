@@ -16,6 +16,7 @@
     "bootswatch-dist": "3.2.0-flatly",
     "bootbox": "4.3.0",
     "datatables": "1.10.7",
-    "datatables-plugins": "latest"
+    "datatables-plugins": "latest",
+    "semantic-ui" : "latest"
   }
 }

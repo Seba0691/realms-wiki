@@ -242,6 +242,28 @@ a.label {
   color: #ffffff;
 }
 
+.btn-white-green{
+  background-color: #ffffff;
+  color: #3be6c4;
+  border-color: #3be6c4;
+}
+
+.btn-white-green:hover{
+  color: #3be6c4;
+}
+
+#page-context{
+  border-bottom: none;
+  border-top: none;
+}
+
+#page-context .sidebar{
+  border-bottom: none;
+  border-top: none;
+  box-shadow: none;
+  border-right-color: #3be6c4;
+}
+
 @media (max-width:1000px) {
   .ace_content {
     padding: 3px;

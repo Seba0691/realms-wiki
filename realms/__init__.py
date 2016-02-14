@@ -234,6 +234,7 @@ assets.register('main.js',
                 'vendor/parsleyjs/dist/parsley.js',
                 'vendor/datatables/media/js/jquery.dataTables.js',
                 'vendor/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.js',
+                'vendor/semantic-ui/dist/semantic.min.js',
                 'js/hbs-helpers.js',
                 'js/mdr.js',
                 'js/main.js')
@@ -243,6 +244,7 @@ assets.register('main.css',
                 'vendor/components-font-awesome/css/font-awesome.css',
                 'vendor/highlightjs/styles/github.css',
                 'vendor/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css',
+                'vendor/semantic-ui/dist/semantic.min.css',
                 'css/style.css')
 
 

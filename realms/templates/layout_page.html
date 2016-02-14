@@ -28,7 +28,7 @@
   <body>
 
     <!-- Fixed navbar -->
-    <div class="navbar navbar-inverse">
+    <div class="navbar navbar-inverse ui top attached">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -83,23 +83,36 @@
     </div>
 
     <!-- Page Menu -->
-    <div class="container">
-      <div id="main-body">
-     {% with messages = get_flashed_messages(with_categories=True) %}
-      {% if messages %}
-        {% for category, message in messages %}
-            {% if category == 'message' %}
-                {% set category = "info" %}
-            {% endif %}
-          <div class='alert alert-{{ category }}'>
-          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-              {{ message }}
-          </div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-    {% block body %}{% endblock %}
+    <div id="page-context" class="container ui bottom attached segment pushable">
+
+      <div class="ui labeled left inline vertical sidebar menu visible">
+        {% block sidebar %}{% endblock %}
       </div>
+
+      <div class="pusher">
+        <div id="main-body" class="ui basic segment">
+          <div class="col-md-1">
+              <a  class="btn btn-white-green fa fa-indent trigger-sidebar" ></a>
+          </div>
+            <div class="col-md-11">
+             {% with messages = get_flashed_messages(with_categories=True) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'message' %}
+                        {% set category = "info" %}
+                    {% endif %}
+                  <div class='alert alert-{{ category }}'>
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                      {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            {% block body %}{% endblock %}
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <script>
@@ -107,6 +120,7 @@
       {% for attr in ['RELATIVE_PATH'] %}
         Config.{{ attr }} = {{ config[attr]|tojson }};
       {% endfor %}
+
       var User = {};
       User.is_authenticated = {{ current_user.is_authenticated()|tojson }};
       {% for attr in ['username', 'email'] %}
@@ -125,6 +139,17 @@
     {% endfor %}
 
     {% block js %}{% endblock %}
+
+  <script type="text/javascript">
+  $('#page-context .ui.sidebar')
+    .sidebar({
+      context: $('#page-context'),
+      transition : 'push',
+      dimPage : false,
+      exclusive : true
+    })
+    .sidebar('attach events', '#page-context .trigger-sidebar')
+  </script>
 
   </body>
 </html>

@@ -136,6 +136,24 @@ def _tree_index(items, path=""):
                        size=size,
                        dir=True)
 
+# Build the proper sidebar for the current directory
+def _build_side(path = ""):
+    items = g.current_wiki.get_index()
+    if path:
+        path = to_canonical(path) + "/"
+    sidebar = []
+    for item in _tree_index(items, path=path):
+        name = ''
+        link = ''
+        if item['dir']:
+            name = item["name"].split('/')[1]
+            link = "/" + item["name"] + "home"
+        else:
+            name = item["name"].split('/')[-1]
+            link = "/" + item["name"]
+        sidebar.append(dict(name = name, dir = item['dir'], link = link))
+    return sidebar            
+
 
 
 @blueprint.route("/_index", defaults={"path": ""})
@@ -202,16 +220,28 @@ def page_write(name):
 
     return dict(sha=sha)
 
-
 @blueprint.route("/buildside")
-def build_side(path = "/"):
-    items = g.current_wiki.get_sub_index("sub1")
+def build_side(path = ""):
+    items = g.current_wiki.get_index()
+    if path:
+        path = to_canonical(path) + "/"
     sidebar = []
-    for item in items :
-        sidebar.append(dict( name = item['name'].split("/")[-1], link = item['name']))
-    return sidebar
+    for item in _tree_index(items, path=path):
+        name = ''
+        link = ''
+        if item['dir']:
+            name = item["name"].split('/')[1]
+            link = "/" + item["name"] + "home"
+        else:
+            name = item["name"].split('/')[-1]
+            link = "/" + item["name"]
+        sidebar.append(dict(name = name, dir = item['dir'], link = link))
+    return sidebar            
 
 
+@blueprint.route("/")
+def home_page():
+   return render_template('wiki/homepage.html')
 
 @blueprint.route("/", defaults={'name': 'home'})
 @blueprint.route("/<path:name>")
@@ -224,9 +254,12 @@ def page(name):
         return redirect(url_for('wiki.page', name=cname))
 
     data = g.current_wiki.get_page(cname)
-    # get the sidebar for this level if any
-    sidebar = g.current_wiki.get_page("sidebar")
+    
+    path = ''
+    if '/' in cname:
+        path = cname[:cname.rfind("/")]
 
+    sidebar = _build_side(path=path)
     if data:
         return render_template('wiki/page.html', name=cname, page=data, sidebar=sidebar, partials=data.get('partials'))
     else:
