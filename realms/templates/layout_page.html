@@ -85,7 +85,7 @@
     <!-- Page Menu -->
     <div id="page-context" class="container ui bottom attached segment pushable">
 
-      <div class="ui labeled left inline vertical sidebar menu visible">
+      <div class="ui simple sidebar vertical menu left uncover visible">
         {% block sidebar %}{% endblock %}
       </div>
 
@@ -94,7 +94,7 @@
           <div class="col-md-1">
               <a  class="btn btn-white-green fa fa-indent trigger-sidebar" ></a>
           </div>
-            <div class="col-md-11">
+            <div class="col-md-9">
              {% with messages = get_flashed_messages(with_categories=True) %}
               {% if messages %}
                 {% for category, message in messages %}
@@ -146,7 +146,8 @@
       context: $('#page-context'),
       transition : 'push',
       dimPage : false,
-      exclusive : true
+      exclusive : true,
+      closable : false
     })
     .sidebar('attach events', '#page-context .trigger-sidebar')
   </script>

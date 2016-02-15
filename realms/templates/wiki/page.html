@@ -1,11 +1,14 @@
 {% extends 'layout_page.html' %}
 
 {% block sidebar %}
-  <ul>
   {% for item in sidebar %}
-    <li><a href="{{ item.link }}">{{ item.name }}</a></li>
+    <a class="item" href="{{ item.link }}">
+        {% if item.name == "Back" %}
+          <i class="fa fa-arrow-circle-left"></i>
+        {% endif %}
+      {{ item.name }}
+    </a>
   {% endfor %}
-  </ul>
 {% endblock %}
 
 {% block page_menu %}

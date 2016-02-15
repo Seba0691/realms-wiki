@@ -264,6 +264,14 @@ a.label {
   border-right-color: #3be6c4;
 }
 
+.center{
+  text-align: center
+}
+
+.margin-top-sm{
+  margin-top: 15% !important;
+}
+
 @media (max-width:1000px) {
   .ace_content {
     padding: 3px;

@@ -137,20 +137,28 @@ def _tree_index(items, path=""):
                        dir=True)
 
 # Build the proper sidebar for the current directory
-def _build_side(path = ""):
+def _build_sidebar(path = ""):
     items = g.current_wiki.get_index()
     if path:
         path = to_canonical(path) + "/"
-    sidebar = []
+    # append always as first element the back link (go up by one level of directory)
+    sidebar = [ dict(name = 'Back', dir = False, link = "../home") ]
+    # get the tree for the current directory (the files belonging to the current subdir plus the subdir of level 1)
     for item in _tree_index(items, path=path):
         name = ''
         link = ''
+        # if we are analyzing a directory 
         if item['dir']:
-            name = item["name"].split('/')[1]
+            # the name is the last word before the last '/' (we have to take the last but one because the returned name has the form /sub1/sub2/sub3/, 
+            # if we would take the last the result will be '')
+            name = item["name"].split('/')[-2]
+            # append the home keyword in order to redirect the user at tjhehomepage of the chosen subdir
             link = "/" + item["name"] + "home"
+        # if we are analyzing a file
         else:
+            # the name i simly the last word after the last "/""
             name = item["name"].split('/')[-1]
-            link = "/" + item["name"]
+            link = "/" + item["name"]          
         sidebar.append(dict(name = name, dir = item['dir'], link = link))
     return sidebar            
 
@@ -220,12 +228,13 @@ def page_write(name):
 
     return dict(sha=sha)
 
+#DEBUG
 @blueprint.route("/buildside")
 def build_side(path = ""):
     items = g.current_wiki.get_index()
     if path:
         path = to_canonical(path) + "/"
-    sidebar = []
+    sidebar = [dict(name = 'Back', dir = False, link = "../")]
     for item in _tree_index(items, path=path):
         name = ''
         link = ''
@@ -236,9 +245,10 @@ def build_side(path = ""):
             name = item["name"].split('/')[-1]
             link = "/" + item["name"]
         sidebar.append(dict(name = name, dir = item['dir'], link = link))
-    return sidebar            
+    return sidebar 
+# FINE DEBUG           
 
-
+# the homepage is not part of the wiki anymore
 @blueprint.route("/")
 def home_page():
    return render_template('wiki/homepage.html')
@@ -254,15 +264,15 @@ def page(name):
         return redirect(url_for('wiki.page', name=cname))
 
     data = g.current_wiki.get_page(cname)
-    
-    path = ''
-    if '/' in cname:
-        path = cname[:cname.rfind("/")]
 
-    sidebar = _build_side(path=path)
+    # get the path to the current file without its name
+    path = cname[:cname.rfind("/")]
+    # buil the sidebar for the retreived path
+    sidebar = _build_sidebar(path=path)
+
     if data:
-        return render_template('wiki/page.html', name=cname, page=data, sidebar=sidebar, partials=data.get('partials'))
+        return render_template('wiki/page.html', name=cname, page=data, sidebar=sidebar, partials=data.get('partials'), path=path)
     else:
-        return redirect(url_for('wiki.create', name=cname))
+         abort(404)
 
 
