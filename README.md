@@ -56,4 +56,8 @@ docker build -t realms-dev .
 docker run --name realms-wiki -p 5000:5000 -t -i -v <PATH_TO_THIS_REPO>/realms:/home/deploy/realms-wiki/.venv/lib/python2.7/site-packages/realms -v <PATH_TO_SAMPLE_WIKI>:/tmp/wiki --rm realms-dev
 ```
 
+[gollum]: https://github.com/gollum/gollum
+[ghost]: https://github.com/tryghost/Ghost
+[dillinger]: https://github.com/joemccann/dillinger/
+
 
