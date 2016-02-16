@@ -84,6 +84,7 @@ def edit(name):
 
     name = remove_ext(page['path'])
     g.assets['js'].append('editor.js')
+
     return render_template('wiki/edit.html',
                            name=name,
                            content=page.get('data'),
@@ -103,7 +104,7 @@ def create(name):
 
     g.assets['js'].append('editor.js')
     return render_template('wiki/edit.html',
-                           name=cname,
+                           name=cname + '/',
                            content="",
                            info={})
 
@@ -181,7 +182,7 @@ def index(path):
 @login_required
 def page_write(name):
     cname = to_canonical(name)
-
+    
     if not cname:
         return dict(error=True, message="Invalid name")
 
@@ -190,10 +191,16 @@ def page_write(name):
 
     if request.method == 'POST':
         # Create
+        create_cname = to_canonical(request.form['name'])
+
+        # if the page already exist we don't want an override
+        if g.current_wiki.get_page(create_cname):
+            return dict(error=True, message="Page already exists"), 403
+
         if cname in current_app.config.get('WIKI_LOCKED_PAGES'):
             return dict(error=True, message="Page is locked"), 403
 
-        sha = g.current_wiki.write_page(cname,
+        sha = g.current_wiki.write_page(create_cname,
                                         request.form['content'],
                                         message=request.form['message'],
                                         create=True,
@@ -227,7 +234,7 @@ def page_write(name):
                                          email=current_user.email)
 
     return dict(sha=sha)
-
+    
 #DEBUG
 @blueprint.route("/buildside")
 def build_side(path = ""):
@@ -265,8 +272,10 @@ def page(name):
 
     data = g.current_wiki.get_page(cname)
 
+    path = cname
     # get the path to the current file without its name
-    path = cname[:cname.rfind("/")]
+    if '/' in cname:
+        path = cname[:cname.rfind("/")]
     # buil the sidebar for the retreived path
     sidebar = _build_sidebar(path=path)
 

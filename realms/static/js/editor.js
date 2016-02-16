@@ -93,27 +93,33 @@ var aced = new Aced({
       message: $page_message.val(),
       content: content
     };
+    // if the last char of the file name is a "/" probably the user forgot to write the file name
+    var lastCharOfName = data.name.slice(-1)
+    if( lastCharOfName === '/'){
+      bootbox.alert("It seems that you forgot to insert the name of the file...");
+    }
+    else{
+      // If renaming an existing page, use the old page name for the URL to PUT to
+      var subPath = (PAGE_NAME) ? PAGE_NAME : data['name'];
+      var path = Config['RELATIVE_PATH'] + '/' + subPath;
+      var newPath = Config['RELATIVE_PATH'] + '/' + data['name'];
+      var type = (Commit.info['sha']) ? "PUT" : "POST";
 
-    // If renaming an existing page, use the old page name for the URL to PUT to
-    var subPath = (PAGE_NAME) ? PAGE_NAME : data['name'];
-    var path = Config['RELATIVE_PATH'] + '/' + subPath;
-    var newPath = Config['RELATIVE_PATH'] + '/' + data['name'];
+      $.ajax({
+        type: type,
+        url: path,
+        data: data,
+        dataType: 'json'
+      }).always(function(data, status, error) {
+        var res = data['responseJSON'];
+        if (res && res['error']) {
+          $page_name.addClass('parsley-error');
+          bootbox.alert("<h3>" + res['message'] + "</h3>");
+        } else {
+          location.href = newPath;
+        }
+      });
+    }
 
-    var type = (Commit.info['sha']) ? "PUT" : "POST";
-
-    $.ajax({
-      type: type,
-      url: path,
-      data: data,
-      dataType: 'json'
-    }).always(function(data, status, error) {
-      var res = data['responseJSON'];
-      if (res && res['error']) {
-        $page_name.addClass('parsley-error');
-        bootbox.alert("<h3>" + res['message'] + "</h3>");
-      } else {
-        location.href = newPath;
-      }
-    });
   }
 });
