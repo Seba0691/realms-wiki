@@ -272,6 +272,14 @@ a.label {
   margin-top: 15% !important;
 }
 
+.bottom-row-100{
+  height: 30px;
+  width: :100%;
+  position: fixed;
+  bottom: 0px;
+  background-color: red;
+}
+
 @media (max-width:1000px) {
   .ace_content {
     padding: 3px;

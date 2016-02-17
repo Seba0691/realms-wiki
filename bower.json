@@ -17,6 +17,7 @@
     "bootbox": "4.3.0",
     "datatables": "1.10.7",
     "datatables-plugins": "latest",
-    "semantic-ui" : "latest"
+    "semantic-ui" : "latest",
+    "plupload" : "latest"
   }
 }
