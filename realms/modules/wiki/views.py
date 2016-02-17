@@ -235,25 +235,12 @@ def page_write(name):
 
     return dict(sha=sha)
     
-#DEBUG
-@blueprint.route("/buildside")
-def build_side(path = ""):
-    items = g.current_wiki.get_index()
-    if path:
-        path = to_canonical(path) + "/"
-    sidebar = [dict(name = 'Back', dir = False, link = "../")]
-    for item in _tree_index(items, path=path):
-        name = ''
-        link = ''
-        if item['dir']:
-            name = item["name"].split('/')[1]
-            link = "/" + item["name"] + "home"
-        else:
-            name = item["name"].split('/')[-1]
-            link = "/" + item["name"]
-        sidebar.append(dict(name = name, dir = item['dir'], link = link))
-    return sidebar 
-# FINE DEBUG           
+
+@blueprint.route("/upload")
+@login_required
+def build_side():
+    return dict(name = 'ciiiii')
+           
 
 # the homepage is not part of the wiki anymore
 @blueprint.route("/")

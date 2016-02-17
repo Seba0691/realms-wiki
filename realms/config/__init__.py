@@ -206,3 +206,6 @@ if globals().get('OAUTH'):
 
 if globals().get('LDAP'):
     MODULES.append('auth.ldap')
+
+TMP_UPLOAD_FOLDER = "/tmp/upload/"
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']

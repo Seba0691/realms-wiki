@@ -4,6 +4,8 @@ var $entry_markdown = $(".entry-markdown");
 var $entry_preview = $(".entry-preview");
 var $page_name = $("#page-name");
 var $page_message = $("#page-message");
+var $upload_progress_bar = $("#progress-bar")
+var $thumbnail_image = $('#preview-image')
 
 // Tabs
 $entry_markdown_header.click(function(){
@@ -123,3 +125,85 @@ var aced = new Aced({
 
   }
 });
+
+
+var uploader = new plupload.Uploader({
+    runtimes : 'html5',
+    // button id that triggers the upload
+    browse_button : 'upload-image-btn', 
+    container: document.getElementById('app-wrap'),
+    //end point 
+    url : "/upload",
+     
+    filters : {
+        max_file_size : '10mb',
+        mime_types: [
+            {title : "Image files", extensions : "jpg,gif,png"},
+        ]
+    },
+
+    unique_names : true,
+
+    multi_selection:false,
+ 
+    init: {
+
+        PostInit: function() {
+
+        },
+ 
+        UploadProgress: function(up, file) {
+            //document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+        },
+ 
+        Error: function(up, err) {
+            //document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
+        }
+    }
+});
+ 
+uploader.init();
+
+var thumbnailEvent = function(files){
+   $.each(files, function(){
+
+    var img = new mOxie.Image();
+
+    img.onload = function() {
+      this.embed($thumbnail_image.get(0), {
+        width: 60,
+        height: 60,
+        crop: true
+      });
+    };
+
+    img.onembedded = function() {
+      this.destroy();
+    };
+
+    img.onerror = function() {
+      this.destroy();
+    };
+
+    img.load(this.getSource());        
+        
+    });
+}
+
+
+uploader.bind('FilesAdded', function(up, files) {
+
+   if($upload_progress_bar.css('display') !== 'none'){
+       $upload_progress_bar.slideUp(400, function(){ 
+        $thumbnail_image.html('')
+        thumbnailEvent(files)
+        $upload_progress_bar.slideDown()
+      })
+   }
+   else{
+       thumbnailEvent(files)
+       $upload_progress_bar.slideDown()
+   } 
+});
+
+
