@@ -128,6 +128,7 @@ var aced = new Aced({
 });
 
 
+
 var uploader = new plupload.Uploader({
     runtimes : 'html5',
     // button id that triggers the upload
@@ -146,15 +147,17 @@ var uploader = new plupload.Uploader({
     unique_names : true,
 
     multi_selection:false,
+
+    chunk_size : "200kb",
  
     init: {
 
         PostInit: function() {           
-            document.getElementById('uploadfiles').onclick = function() {
+            $('#uploadfiles').click(function() {
                 uploader.start();
                 console.log("aaaa")
                 return false;
-            };
+            });
         },
  
         UploadProgress: function(up, file) {
@@ -163,13 +166,26 @@ var uploader = new plupload.Uploader({
  
         Error: function(up, err) {
             console.log('[UploadError] :', err)
-            bootbox.alert("Somethiong went wrong during the upload")
-            $(".progress-bar").css("width", 100 + "%" ).css("background-color", "#DE0202").attr('aria-valuenow',100)
+             $(".progress-bar").css("width", "100%").attr('aria-valuenow',100)
+            bootbox.alert("Something went wrong during the upload")
+            $('#action-buttons').fadeOut(400, function(){
+              $(".progress-bar").addClass('progress-bar-failure')
+              $('#response-button-failure').fadeIn()
+            })
+        },
+
+        ChunkUploaded: function(up, file, info) {
+            // Called when file chunk has finished uploading
+            console.log('[ChunkUploaded] File:', file, "Info:", info);
         },
 
         FileUploaded: function(up, file, info) {
             // Called when file has finished uploading
             console.log('[FileUploaded] File:', file, "Info:", info)
+            $('#action-buttons').fadeOut(400, function(){
+              $(".progress-bar").addClass('progress-bar-success')
+              $('#response-button-success').fadeIn()
+            })
         },
     }
 });
@@ -204,22 +220,49 @@ var thumbnailEvent = function(files){
     });
 }
 
+function resetButtons(){
+    $('#response-button-failure').fadeOut()
+    $('#response-button-success').fadeOut()
+    $('#action-buttons').fadeIn()
+    $(".progress-bar").removeClass('progress-bar-success')
+    $(".progress-bar").removeClass('progress-bar-failure')
+    $(".progress-bar").css("width", 0 + "%" ).attr('aria-valuenow',0)
+    $thumbnail_image.html('')
+}
 
 uploader.bind('FilesAdded', function(up, files) {
 
    if($upload_progress_bar.css('display') !== 'none'){
        $upload_progress_bar.slideUp(400, function(){ 
+        resetButtons()
         $thumbnail_image.html('')
-        thumbnailEvent(files)
-        $(".progress-bar").css("width", 0 + "%" ).attr('aria-valuenow',0)
+        thumbnailEvent(files)        
         $upload_progress_bar.slideDown()
       })
    }
    else{
-       thumbnailEvent(files)
-       $(".progress-bar").css("width", 0 + "%").attr('aria-valuenow',0)
-       $upload_progress_bar.slideDown()
+        resetButtons()
+        thumbnailEvent(files)
+        $upload_progress_bar.slideDown()
    } 
 });
 
 
+
+$(document).ready(function(){
+   $('#response-button-success').hide()
+   $('#response-button-failure').hide()
+
+   $('.btn-upload-cancel').click(function() {
+        $upload_progress_bar.slideUp()
+   });
+
+
+   $('#response-button-success .btn-upload').click(function() {
+        $upload_progress_bar.slideUp()
+   });
+
+   $('#response-button-failure .btn-upload').click(function() {
+        $upload_progress_bar.slideUp()
+   });
+})

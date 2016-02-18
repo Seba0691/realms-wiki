@@ -335,9 +335,9 @@ a.label {
 }
 
 .upload-buttons{
-  margin-top: 10px;
-  text-align: center;
-  width: 10%;
+    margin-top: 10px;
+    text-align: center;
+    width: 10%;
 }
 
 .image-info .progress{
@@ -345,10 +345,39 @@ a.label {
     margin-top: 20px;
 }
 
-.progress-bar[aria-valuenow="100"]{
+
+.progress-bar-success{
   background-color: #51D224;
 }
 
+.progress-bar-failure{
+  background-color: #EC2A2A;
+}
+
+#response-button-success .btn-upload{
+    background-color: transparent;
+    border: 1px solid #51D224;
+    color: #51D224;
+}
+
+#response-button-success .btn-upload:hover{
+    color: white;
+    border: 1px solid transparent;
+    background-color: #51D224;
+}
+
+
+#response-button-failure .btn-upload{
+    background-color: transparent;
+    border: 1px solid #EC2A2A;
+    color: #EC2A2A;
+}
+
+#response-button-failure .btn-upload:hover{
+    color: white;
+    border: 1px solid transparent;
+    background-color: #EC2A2A;
+}
 
 @media (max-width:1000px) {
   .ace_content {

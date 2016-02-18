@@ -182,7 +182,26 @@ def index(path):
 @blueprint.route("/upload", methods=['POST'])
 def upload_handler():
     if request.method == 'POST':
-        return dict(name = 'ciiiii')
+        #get the chunk and the number of chunks if they are defined (only if the client send the image in chunk mode)
+        chunk = request.form['chunk'] if 'chunk' in request.form else None
+        chunks = request.form['chunks'] if 'chunks' in request.form else None
+        #get the information relative to the file
+        file_name = request.form['name']
+        file_path = "/tmp/wiki/" + file_name
+        # if we receive the first chunk lets's open the file as a new one
+        # otherwise open it in append mode in order to write the next chunk
+        tmp_file = open(file_path, "wb" if chunk == 0 else "ab")
+
+        if tmp_file:
+            # get the content of he received chunk
+            in_file = request.files['file']
+            if in_file:
+                # update the file
+                tmp_file.write(in_file.read())
+
+            tmp_file.close()
+
+        return dict(success = request.form)
 
 
 @blueprint.route("/<path:name>", methods=['POST', 'PUT', 'DELETE'])
