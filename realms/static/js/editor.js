@@ -6,7 +6,8 @@ var $page_name = $("#page-name");
 var $page_message = $("#page-message");
 var $upload_progress_bar = $("#progress-bar")
 var $thumbnail_image = $('#preview-image')
-
+var $image_info = $('.image-info')
+var $upload_button = $('.btn-upload')
 // Tabs
 $entry_markdown_header.click(function(){
   $entry_markdown.addClass('active');
@@ -133,7 +134,7 @@ var uploader = new plupload.Uploader({
     browse_button : 'upload-image-btn', 
     container: document.getElementById('app-wrap'),
     //end point 
-    url : "/upload",
+    url : "/upload/",
      
     filters : {
         max_file_size : '10mb',
@@ -148,17 +149,28 @@ var uploader = new plupload.Uploader({
  
     init: {
 
-        PostInit: function() {
-
+        PostInit: function() {           
+            document.getElementById('uploadfiles').onclick = function() {
+                uploader.start();
+                console.log("aaaa")
+                return false;
+            };
         },
  
         UploadProgress: function(up, file) {
-            //document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+            $(".progress-bar").css("width", (file.percent + "%") ).attr('aria-valuenow',file.percent)
         },
  
         Error: function(up, err) {
-            //document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
-        }
+            console.log('[UploadError] :', err)
+            bootbox.alert("Somethiong went wrong during the upload")
+            $(".progress-bar").css("width", 100 + "%" ).css("background-color", "#DE0202").attr('aria-valuenow',100)
+        },
+
+        FileUploaded: function(up, file, info) {
+            // Called when file has finished uploading
+            console.log('[FileUploaded] File:', file, "Info:", info)
+        },
     }
 });
  
@@ -166,6 +178,8 @@ uploader.init();
 
 var thumbnailEvent = function(files){
    $.each(files, function(){
+
+    $image_info.children("#image-title").text(this.name)
 
     var img = new mOxie.Image();
 
@@ -197,11 +211,13 @@ uploader.bind('FilesAdded', function(up, files) {
        $upload_progress_bar.slideUp(400, function(){ 
         $thumbnail_image.html('')
         thumbnailEvent(files)
+        $(".progress-bar").css("width", 0 + "%" ).attr('aria-valuenow',0)
         $upload_progress_bar.slideDown()
       })
    }
    else{
        thumbnailEvent(files)
+       $(".progress-bar").css("width", 0 + "%").attr('aria-valuenow',0)
        $upload_progress_bar.slideDown()
    } 
 });

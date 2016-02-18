@@ -178,6 +178,13 @@ def index(path):
     return render_template('wiki/index.html', index=_tree_index(items, path=path), path=path)
 
 
+
+@blueprint.route("/upload", methods=['POST'])
+def upload_handler():
+    if request.method == 'POST':
+        return dict(name = 'ciiiii')
+
+
 @blueprint.route("/<path:name>", methods=['POST', 'PUT', 'DELETE'])
 @login_required
 def page_write(name):
@@ -235,11 +242,6 @@ def page_write(name):
 
     return dict(sha=sha)
     
-
-@blueprint.route("/upload")
-@login_required
-def build_side():
-    return dict(name = 'ciiiii')
            
 
 # the homepage is not part of the wiki anymore
