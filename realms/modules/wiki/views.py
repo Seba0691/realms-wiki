@@ -4,6 +4,7 @@ from flask import abort, g, render_template, request, redirect, Blueprint, flash
 from flask.ext.login import login_required, current_user
 from realms.lib.util import to_canonical, remove_ext, gravatar_url
 from .models import PageNotFound
+import re
 
 blueprint = Blueprint('wiki', __name__)
 
@@ -187,7 +188,7 @@ def upload_handler():
         chunks = request.form['chunks'] if 'chunks' in request.form else None
         #get the information relative to the file
         file_name = request.form['name']
-        file_path = "/tmp/wiki/" + file_name
+        file_path = current_app.config.get('UPLOAD_FOLDER') + file_name
         # if we receive the first chunk lets's open the file as a new one
         # otherwise open it in append mode in order to write the next chunk
         tmp_file = open(file_path, "wb" if chunk == 0 else "ab")
@@ -202,6 +203,19 @@ def upload_handler():
             tmp_file.close()
 
         return dict(success = request.form)
+
+@blueprint.route("/debug")
+def debug_route():
+    content ="""
+            <img src='/static/img/uploads/img1.png' class='image-fit-100'/>
+            <img src='/static/img/uploads/img2.png' class='image-fit-100'/>
+            <img src='/static/img/uploads/img3.png' class='image-fit-100'/>
+            """
+    img_list = re.findall("src\s*=\s*'(.+?)'", content)
+    new_list = []
+    for img in img_list:
+        new_list.append(re.sub("uploads", "uploads_tmp", img))
+    return new_list
 
 
 @blueprint.route("/<path:name>", methods=['POST', 'PUT', 'DELETE'])

@@ -63,6 +63,7 @@ def get_path(check_write=False):
 
 APP_PATH = os.path.abspath(os.path.dirname(__file__) + "/../..")
 USER_HOME = os.path.abspath(os.path.expanduser("~"))
+STATIC_PATH = os.path.join(APP_PATH, 'realms/static')
 
 # Best to change to /var/run
 PIDFILE = "/tmp/realms-wiki.pid"
@@ -207,5 +208,5 @@ if globals().get('OAUTH'):
 if globals().get('LDAP'):
     MODULES.append('auth.ldap')
 
-TMP_UPLOAD_FOLDER = "/tmp/upload/"
+UPLOAD_FOLDER = STATIC_PATH + "/img/uploads/"
 ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']

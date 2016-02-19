@@ -379,6 +379,14 @@ a.label {
     background-color: #EC2A2A;
 }
 
+.image-fit-100{
+  width: 100%;
+}
+
+.sidebar.col-sm-2{
+    padding: 0 0 0 0;
+}
+
 @media (max-width:1000px) {
   .ace_content {
     padding: 3px;

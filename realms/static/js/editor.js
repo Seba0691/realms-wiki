@@ -107,7 +107,8 @@ var aced = new Aced({
       var path = Config['RELATIVE_PATH'] + '/' + subPath;
       var newPath = Config['RELATIVE_PATH'] + '/' + data['name'];
       var type = (Commit.info['sha']) ? "PUT" : "POST";
-
+      console.log(content)
+      /*
       $.ajax({
         type: type,
         url: path,
@@ -122,6 +123,7 @@ var aced = new Aced({
           location.href = newPath;
         }
       });
+      */
     }
 
   }
@@ -186,6 +188,7 @@ var uploader = new plupload.Uploader({
               $(".progress-bar").addClass('progress-bar-success')
               $('#response-button-success').fadeIn()
             })
+            aced.editor.insert("<img src='/static/img/uploads/" + file.id  + ".png' class='image-fit-100'/>")
         },
     }
 });
