@@ -6,6 +6,7 @@ from realms.lib.util import to_canonical, remove_ext, gravatar_url
 from .models import PageNotFound
 import re
 import shutil
+import os.path
 
 blueprint = Blueprint('wiki', __name__)
 
@@ -86,13 +87,15 @@ def edit(name):
 
     name = remove_ext(page['path'])
     g.assets['js'].append('editor.js')
-
+    # get the list of the images present in the current page
+    img_list = re.findall("src\s*=\s*'(.+?)'", page.get('data'))
     return render_template('wiki/edit.html',
                            name=name,
                            content=page.get('data'),
                            info=page.get('info'),
                            sha=page.get('sha'),
-                           partials=page.get('partials'))
+                           partials=page.get('partials'),
+                           img_list=img_list)
 
 
 @blueprint.route("/_create/", defaults={'name': None})
@@ -163,8 +166,38 @@ def _build_sidebar(path = ""):
             name = item["name"].split('/')[-1]
             link = "/" + item["name"]          
         sidebar.append(dict(name = name, dir = item['dir'], link = link))
-    return sidebar            
+    return sidebar      
 
+def _image_management(content):
+    # get the image which have "uploadstmp" in the path (the images that has to be moves)
+    img_list = re.findall("src\s*=\s*'(.+?uploadstmp.+?)'", content)
+   
+    dst_path = current_app.config.get('UPLOAD_FOLDER')
+    src_path = current_app.config.get('TMP_UPLOAD_FOLDER')
+
+    for img_path in img_list:
+        img_name = img_path.split("/")[-1]
+        src = src_path + img_name
+        dst = dst_path + img_name
+        #check if the source file has been uploaded correctly
+        if not os.path.isfile(src):
+            return None
+        # move the file in the appropriate folder
+        shutil.move(src, dst)
+        #check if the file has been moved correcly
+        if not os.path.isfile(dst):
+            return None
+    #change the content of the md file in order to updae the image path
+    content = re.sub("(?<=src='/static/img/)uploadstmp", "uploads", content)
+    return content     
+
+def _delete_images(img_list):
+    path = current_app.config.get('UPLOAD_FOLDER')
+    for img in img_list:
+        img_name = img.split("/")[-1]
+        image_path = path + img_name
+        if os.path.isfile(image_path):
+            os.remove(image_path)
 
 
 @blueprint.route("/_index", defaults={"path": ""})
@@ -241,20 +274,9 @@ def page_write(name):
             return dict(error=True, message="Page is locked"), 403
 
         #image management
-        content = request.form['content']
-        # get the image which have "uploadstmp" in the path (the images that has to be moves)
-        img_list = re.findall("src\s*=\s*'(.+?uploadstmp.+?)'", content)
-       
-        dst_path = current_app.config.get('UPLOAD_FOLDER')
-        src_path = current_app.config.get('TMP_UPLOAD_FOLDER')
-
-        for img_path in img_list:
-            img_name = img_path.split("/")[-1]
-            #return dict(dst = dst_path + img_name, src =  src_path + img_name)
-            shutil.move(src_path + img_name, dst_path + img_name)
-
-        content = re.sub("(?<=src='/static/img/)uploadstmp", "uploads", content)
-
+        content = _image_management(request.form['content'])
+        if not content:
+            return dict(error=True, message="Error during images management"), 500
         #end image management
 
         sha = g.current_wiki.write_page(create_cname,
@@ -273,8 +295,25 @@ def page_write(name):
         if edit_cname != cname:
             g.current_wiki.rename_page(cname, edit_cname)
 
+
+        #image management
+        content = _image_management(request.form['content'])
+        if not content:
+            return dict(error=True, message="Error during images management"), 500
+        #end image management
+        
+        # get the list of the images present in the current page
+        img_list = re.findall("src\s*=\s*'(.+?)'", content)
+        #return dict(response = request.form.getlist('img_list[]'))
+        # get the list of images that were present befor the edit
+        old_image_list = request.form.getlist('img_list[]')
+        # retrieve the difference (images to be deleted)
+        images_to_delete = [img for img in old_image_list if img not in img_list]
+        # delete those images
+        _delete_images(images_to_delete)
+
         sha = g.current_wiki.write_page(edit_cname,
-                                        request.form['content'],
+                                        content,
                                         message=request.form['message'],
                                         username=current_user.username,
                                         email=current_user.email)

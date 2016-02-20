@@ -8,6 +8,7 @@ var $upload_progress_bar = $("#progress-bar")
 var $thumbnail_image = $('#preview-image')
 var $image_info = $('.image-info')
 var $upload_button = $('.btn-upload')
+var $img_list = $('input[name^="images"]')
 // Tabs
 $entry_markdown_header.click(function(){
   $entry_markdown.addClass('active');
@@ -91,10 +92,18 @@ var aced = new Aced({
   renderer: function(md) { return MDR.convert(md) },
   info: Commit.info,
   submit: function(content) {
+
+    var img_list = []
+
+    $img_list.each(function(){
+      img_list.push($(this).val())
+    })
+
     var data = {
       name: $page_name.val().replace(/^\/*/g, "").replace(/\/+/g, "/"),
       message: $page_message.val(),
-      content: content
+      content: content,
+      img_list: img_list
     };
     // if the last char of the file name is a "/" probably the user forgot to write the file name
     var lastCharOfName = data.name.slice(-1)
@@ -108,7 +117,6 @@ var aced = new Aced({
       var newPath = Config['RELATIVE_PATH'] + '/' + data['name'];
       var type = (Commit.info['sha']) ? "PUT" : "POST";
       //console.log(content)
-      
       $.ajax({
         type: type,
         url: path,
@@ -123,7 +131,6 @@ var aced = new Aced({
           location.href = newPath;
         }
       });
-     
     }
 
   }
@@ -188,7 +195,7 @@ var uploader = new plupload.Uploader({
               $(".progress-bar").addClass('progress-bar-success')
               $('#response-button-success').fadeIn()
             })
-            aced.editor.insert("<img src='/static/img/uploadstmp/" + file.id  + ".png' class='image-fit-100'/>")
+            aced.editor.insert("<img src='/static/img/uploadstmp/" + file.target_name + "' " + "class='image-fit-100'/>")
         },
     }
 });

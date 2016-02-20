@@ -152,6 +152,12 @@
       </div>
     </div>
 
+    <div>
+      {% for img in img_list %}
+          <input name="images[{{ img_list.index(img) }}]" value="{{ img }}" type="hidden">
+      {% endfor %}
+    </div>
+
     <section class="entry-markdown active">
       <header class="floatingheader" id="entry-markdown-header">
         <small>Markdown</small>
@@ -174,6 +180,8 @@
 
   </div>
 
+
+
   <div class="bottom-row-100" id="progress-bar">
       <div class="thumbnail-image" id="preview-image"></div>
       <div class="image-info">
@@ -194,6 +202,8 @@
         <a class="btn btn-default btn-circle btn-upload"><i class="fa fa-exclamation-triangle"></i></a>
       </div>
   </div>
+
+
 
 
 {% endblock %}
