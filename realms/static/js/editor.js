@@ -78,6 +78,7 @@ var deletePage = function() {
     type: 'DELETE',
     url: path,
   }).done(function(data) {
+    console.log(data)
     var msg = 'Deleted page: ' + pageName;
     bootbox.alert(msg, function() {
       location.href = '/';

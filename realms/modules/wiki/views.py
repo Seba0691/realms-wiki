@@ -199,6 +199,9 @@ def _delete_images(img_list):
         if os.path.isfile(image_path):
             os.remove(image_path)
 
+def _find_images_in_page(page):
+    return re.findall("src\s*=\s*'(.+?)'", page)
+
 
 @blueprint.route("/_index", defaults={"path": ""})
 @blueprint.route("/_index/<path:path>")
@@ -303,7 +306,7 @@ def page_write(name):
         #end image management
         
         # get the list of the images present in the current page
-        img_list = re.findall("src\s*=\s*'(.+?)'", content)
+        img_list = _find_images_in_page(content)
         #return dict(response = request.form.getlist('img_list[]'))
         # get the list of images that were present befor the edit
         old_image_list = request.form.getlist('img_list[]')
@@ -324,7 +327,12 @@ def page_write(name):
         # DELETE
         if cname in current_app.config.get('WIKI_LOCKED_PAGES'):
             return dict(error=True, message="Page is locked"), 403
-
+        #get the imges present in the current page
+        page = g.current_wiki.get_page(cname) 
+        img_list = _find_images_in_page(page['data'])
+        # delete those images
+        _delete_images(img_list)
+        return dict(response = page)          
         sha = g.current_wiki.delete_page(cname,
                                          username=current_user.username,
                                          email=current_user.email)
