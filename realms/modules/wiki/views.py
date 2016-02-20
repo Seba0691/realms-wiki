@@ -5,6 +5,7 @@ from flask.ext.login import login_required, current_user
 from realms.lib.util import to_canonical, remove_ext, gravatar_url
 from .models import PageNotFound
 import re
+import shutil
 
 blueprint = Blueprint('wiki', __name__)
 
@@ -188,7 +189,8 @@ def upload_handler():
         chunks = request.form['chunks'] if 'chunks' in request.form else None
         #get the information relative to the file
         file_name = request.form['name']
-        file_path = current_app.config.get('UPLOAD_FOLDER') + file_name
+        #save the file first in the tmp folder... the image will be moved in the reall older when the page will be saved 
+        file_path = current_app.config.get('TMP_UPLOAD_FOLDER') + file_name
         # if we receive the first chunk lets's open the file as a new one
         # otherwise open it in append mode in order to write the next chunk
         tmp_file = open(file_path, "wb" if chunk == 0 else "ab")
@@ -208,14 +210,12 @@ def upload_handler():
 def debug_route():
     content ="""
             <img src='/static/img/uploads/img1.png' class='image-fit-100'/>
-            <img src='/static/img/uploads/img2.png' class='image-fit-100'/>
+            <img src='/static/img/uploadstmp/img2.png' class='image-fit-100'/>
             <img src='/static/img/uploads/img3.png' class='image-fit-100'/>
             """
-    img_list = re.findall("src\s*=\s*'(.+?)'", content)
-    new_list = []
-    for img in img_list:
-        new_list.append(re.sub("uploads", "uploads_tmp", img))
-    return new_list
+    img_list = re.findall("src\s*=\s*'(.+?uploadstmp.+?)'", content)
+    new_img_list = re.sub("(?<=src='/static/img/)uploads", "uploadstmp", content)
+    return img_list
 
 
 @blueprint.route("/<path:name>", methods=['POST', 'PUT', 'DELETE'])
@@ -240,8 +240,25 @@ def page_write(name):
         if cname in current_app.config.get('WIKI_LOCKED_PAGES'):
             return dict(error=True, message="Page is locked"), 403
 
+        #image management
+        content = request.form['content']
+        # get the image which have "uploadstmp" in the path (the images that has to be moves)
+        img_list = re.findall("src\s*=\s*'(.+?uploadstmp.+?)'", content)
+       
+        dst_path = current_app.config.get('UPLOAD_FOLDER')
+        src_path = current_app.config.get('TMP_UPLOAD_FOLDER')
+
+        for img_path in img_list:
+            img_name = img_path.split("/")[-1]
+            #return dict(dst = dst_path + img_name, src =  src_path + img_name)
+            shutil.move(src_path + img_name, dst_path + img_name)
+
+        content = re.sub("(?<=src='/static/img/)uploadstmp", "uploads", content)
+
+        #end image management
+
         sha = g.current_wiki.write_page(create_cname,
-                                        request.form['content'],
+                                        content,
                                         message=request.form['message'],
                                         create=True,
                                         username=current_user.username,
