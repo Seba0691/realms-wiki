@@ -167,7 +167,6 @@ class Wiki(HookMixin):
             message = "Deleted %s" % name
 
         filename = cname_to_filename(name)
-
         # gittle.rm won't actually remove the file, have to do it ourselves
         os.remove(os.path.join(self.path, filename))
         self.gittle.rm(filename)

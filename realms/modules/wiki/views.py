@@ -324,7 +324,7 @@ def page_write(name):
         return dict(sha=sha)
 
     elif request.method == 'DELETE':
-        # DELETE
+	# DELETE
         if cname in current_app.config.get('WIKI_LOCKED_PAGES'):
             return dict(error=True, message="Page is locked"), 403
         #get the imges present in the current page
@@ -332,7 +332,8 @@ def page_write(name):
         img_list = _find_images_in_page(page['data'])
         # delete those images
         _delete_images(img_list)
-        return dict(response = page)          
+        #secondo me e' sbagliato
+	#return dict(response = page)          
         sha = g.current_wiki.delete_page(cname,
                                          username=current_user.username,
                                          email=current_user.email)

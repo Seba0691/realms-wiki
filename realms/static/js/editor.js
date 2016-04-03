@@ -112,12 +112,20 @@ var aced = new Aced({
       bootbox.alert("It seems that you forgot to insert the name of the file...");
     }
     else{
+       //BugFix
       // If renaming an existing page, use the old page name for the URL to PUT to
-      var subPath = (PAGE_NAME) ? PAGE_NAME : data['name'];
+      var subPath = (data['name']) ? data["name"] : PAGE_NAME; 
       var path = Config['RELATIVE_PATH'] + '/' + subPath;
       var newPath = Config['RELATIVE_PATH'] + '/' + data['name'];
       var type = (Commit.info['sha']) ? "PUT" : "POST";
-      //console.log(content)
+      
+      //console.log("path " + path); 
+      //console.log( "type "+type);
+      //console.log("relative path "+Config['RELATIVE_PATH']);
+      
+      //console.log("page NAME "+PAGE_NAME);
+      //console.log("data name" +data["name"]);
+      //console.log(data);
       $.ajax({
         type: type,
         url: path,
