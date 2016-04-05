@@ -258,11 +258,24 @@ a.label {
 }
 
 #page-context .sidebar{
-  border-bottom: none;
-  border-top: none;
+  border: none;
   box-shadow: none;
-  border-right-color: #3be6c4;
 }
+
+#page-content h1{
+  border-bottom: 2px solid black;
+}
+
+#page-content h2{
+  width: 75%;
+  border-bottom: 2px solid limegreen;
+}
+
+#page-content h3{
+  width: 50%;
+  border-bottom: 2px solid red;
+}
+
 
 .center{
   text-align: center
@@ -385,6 +398,10 @@ a.label {
 
 .sidebar.col-sm-2{
     padding: 0 0 0 0;
+}
+
+.left-sidebar{
+    border-left: 1px solid #3be6c4;
 }
 
 @media (max-width:1000px) {

@@ -89,12 +89,12 @@
         {% block sidebar %}{% endblock %}
       </div>
 
-      <div class="pusher col-sm-10">
+      <div class="col-sm-8 left-sidebar">
         <div id="main-body" class="ui basic segment">
           <div class="col-md-1">
               <a  class="btn btn-white-green fa fa-indent trigger-sidebar" ></a>
           </div>
-            <div class="col-md-9">
+            <div class="col-md-11">
              {% with messages = get_flashed_messages(with_categories=True) %}
               {% if messages %}
                 {% for category, message in messages %}
@@ -111,6 +111,10 @@
             {% block body %}{% endblock %}
           </div>
         </div>
+      </div>
+
+      <div class="col-sm-2">
+        
       </div>
 
     </div>

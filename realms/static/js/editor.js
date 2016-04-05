@@ -78,7 +78,6 @@ var deletePage = function() {
     type: 'DELETE',
     url: path,
   }).done(function(data) {
-    console.log(data)
     var msg = 'Deleted page: ' + pageName;
     bootbox.alert(msg, function() {
       location.href = '/';
@@ -173,7 +172,6 @@ var uploader = new plupload.Uploader({
         PostInit: function() {           
             $('#uploadfiles').click(function() {
                 uploader.start();
-                console.log("aaaa")
                 return false;
             });
         },
@@ -183,7 +181,6 @@ var uploader = new plupload.Uploader({
         },
  
         Error: function(up, err) {
-            console.log('[UploadError] :', err)
              $(".progress-bar").css("width", "100%").attr('aria-valuenow',100)
             bootbox.alert("Something went wrong during the upload")
             $('#action-buttons').fadeOut(400, function(){
@@ -194,12 +191,10 @@ var uploader = new plupload.Uploader({
 
         ChunkUploaded: function(up, file, info) {
             // Called when file chunk has finished uploading
-            console.log('[ChunkUploaded] File:', file, "Info:", info);
         },
 
         FileUploaded: function(up, file, info) {
             // Called when file has finished uploading
-            console.log('[FileUploaded] File:', file, "Info:", info)
             $('#action-buttons').fadeOut(400, function(){
               $(".progress-bar").addClass('progress-bar-success')
               $('#response-button-success').fadeIn()
