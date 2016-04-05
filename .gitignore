@@ -158,5 +158,6 @@ ENV/
 # Rope project settings
 .ropeproject
 
-realms/static/img/uploads/
-realms/static/img/uploadstmp/
+realms/static/img/uploads
+realms/static/img/uploadstmp
+realms/config
