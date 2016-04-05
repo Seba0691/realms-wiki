@@ -157,9 +157,9 @@ WIKI_PATH = '/tmp/wiki'
 WIKI_HOME = 'home'
 
 AUTH_LOCAL_ENABLE = True
-ALLOW_ANON = True
+ALLOW_ANON = False
 REGISTRATION_ENABLED = True
-PRIVATE_WIKI = False
+PRIVATE_WIKI = True
 
 # None, firepad, and/or togetherjs
 COLLABORATION = 'togetherjs'
@@ -210,6 +210,4 @@ if globals().get('LDAP'):
 
 TMP_UPLOAD_FOLDER = STATIC_PATH + "/img/uploadstmp/"
 UPLOAD_FOLDER = STATIC_PATH + "/img/uploads/"
-
-
 ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']

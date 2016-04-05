@@ -12,6 +12,7 @@ blueprint = Blueprint('wiki', __name__)
 
 
 @blueprint.route("/_commit/<sha>/<path:name>")
+@login_required
 def commit(name, sha):
     if current_app.config.get('PRIVATE_WIKI') and current_user.is_anonymous():
         return current_app.login_manager.unauthorized()
@@ -27,6 +28,7 @@ def commit(name, sha):
 
 
 @blueprint.route(r"/_compare/<path:name>/<regex('\w+'):fsha><regex('\.{2,3}'):dots><regex('\w+'):lsha>")
+@login_required
 def compare(name, fsha, dots, lsha):
     if current_app.config.get('PRIVATE_WIKI') and current_user.is_anonymous():
         return current_app.login_manager.unauthorized()
@@ -65,6 +67,7 @@ def revert():
 
 
 @blueprint.route("/_history/<path:name>")
+@login_required
 def history(name):
     if current_app.config.get('PRIVATE_WIKI') and current_user.is_anonymous():
         return current_app.login_manager.unauthorized()
@@ -205,6 +208,7 @@ def _find_images_in_page(page):
 
 @blueprint.route("/_index", defaults={"path": ""})
 @blueprint.route("/_index/<path:path>")
+@login_required
 def index(path):
     if current_app.config.get('PRIVATE_WIKI') and current_user.is_anonymous():
         return current_app.login_manager.unauthorized()
@@ -218,6 +222,7 @@ def index(path):
 
 
 @blueprint.route("/upload", methods=['POST'])
+@login_required
 def upload_handler():
     if request.method == 'POST':
         #get the chunk and the number of chunks if they are defined (only if the client send the image in chunk mode)
@@ -241,18 +246,6 @@ def upload_handler():
             tmp_file.close()
 
         return dict(success = request.form)
-
-@blueprint.route("/debug")
-def debug_route():
-    content ="""
-            <img src='/static/img/uploads/img1.png' class='image-fit-100'/>
-            <img src='/static/img/uploadstmp/img2.png' class='image-fit-100'/>
-            <img src='/static/img/uploads/img3.png' class='image-fit-100'/>
-            """
-    img_list = re.findall("src\s*=\s*'(.+?uploadstmp.+?)'", content)
-    new_img_list = re.sub("(?<=src='/static/img/)uploads", "uploadstmp", content)
-    return img_list
-
 
 @blueprint.route("/<path:name>", methods=['POST', 'PUT', 'DELETE'])
 @login_required
@@ -324,7 +317,6 @@ def page_write(name):
         return dict(sha=sha)
 
     elif request.method == 'DELETE':
-	# DELETE
         if cname in current_app.config.get('WIKI_LOCKED_PAGES'):
             return dict(error=True, message="Page is locked"), 403
         #get the imges present in the current page
@@ -333,7 +325,6 @@ def page_write(name):
         # delete those images
         _delete_images(img_list)
         #secondo me e' sbagliato
-	#return dict(response = page)          
         sha = g.current_wiki.delete_page(cname,
                                          username=current_user.username,
                                          email=current_user.email)
@@ -344,11 +335,13 @@ def page_write(name):
 
 # the homepage is not part of the wiki anymore
 @blueprint.route("/")
+@login_required
 def home_page():
    return render_template('wiki/homepage.html')
 
 @blueprint.route("/", defaults={'name': 'home'})
 @blueprint.route("/<path:name>")
+@login_required
 def page(name):
     if current_app.config.get('PRIVATE_WIKI') and current_user.is_anonymous():
         return current_app.login_manager.unauthorized()
