@@ -260,6 +260,44 @@ a.label {
 #page-context .sidebar{
   border: none;
   box-shadow: none;
+  padding-right: 0px;
+}
+
+#page-context .sidebar .item{
+  border-radius: 0!important;
+  display: block;
+  background: 0 0;
+  border-top: none;
+  border-right: none;
+  position: relative;
+  vertical-align: middle;
+  line-height: 1;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background: 0 0;
+  padding: .92857143em 1.14285714em;
+  text-transform: none;
+  color: rgba(0,0,0,.87);
+  font-weight: 400;
+  -webkit-transition: background .1s ease,box-shadow .1s ease,color .1s ease;
+  transition: background .1s ease,box-shadow .1s ease,color .1s ease;
+  font-size: 1rem;
+  font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+  border-bottom: 1px solid rgba(34,36,38,.1);
+}
+
+#page-context .sidebar .item:hover{
+  cursor: pointer;
+  background: rgba(0,0,0,.03);
+  color: rgba(0,0,0,.95);
 }
 
 #page-content h1{
@@ -396,9 +434,6 @@ a.label {
   width: 100%;
 }
 
-.sidebar.col-sm-2{
-    padding: 0 0 0 0;
-}
 
 .left-sidebar{
     border-left: 1px solid #3be6c4;

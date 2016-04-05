@@ -225,7 +225,6 @@ ldap = MyLDAPLoginManager()
 
 assets.register('main.js',
                 'vendor/jquery/dist/jquery.js',
-                'vendor/semantic-ui/dist/semantic.min.js',
                 'vendor/components-bootstrap/js/bootstrap.js',
                 'vendor/handlebars/handlebars.js',
                 'vendor/js-yaml/dist/js-yaml.js',
