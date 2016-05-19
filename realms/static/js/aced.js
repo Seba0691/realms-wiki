@@ -118,6 +118,8 @@ function Aced(settings) {
   }
 
   function render(content) {
+    console.log('RENDERER')
+    console.log(options.renderer)
     return (options.renderer) ? options.renderer(content) : content;
   }
 

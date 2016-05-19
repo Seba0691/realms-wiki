@@ -53,7 +53,7 @@ marked.setOptions({
 var MDR = {
   meta: null,
   md: null,
-  sanitize: true, // Override
+  sanitize: false, // --- WARNING --- Sanitize disabled due to give the possibility to style uploaded images with "style" attribute
   renderer: new marked.Renderer(),
   parse: function(md){
     return marked(md, { renderer: this.renderer });
