@@ -118,13 +118,6 @@ var aced = new Aced({
       var newPath = Config['RELATIVE_PATH'] + '/' + data['name'];
       var type = (Commit.info['sha']) ? "PUT" : "POST";
       
-      //console.log("path " + path); 
-      //console.log( "type "+type);
-      //console.log("relative path "+Config['RELATIVE_PATH']);
-      
-      //console.log("page NAME "+PAGE_NAME);
-      //console.log("data name" +data["name"]);
-      //console.log(data);
       $.ajax({
         type: type,
         url: path,
@@ -279,4 +272,34 @@ $(document).ready(function(){
    $('#response-button-failure .btn-upload').click(function() {
         $upload_progress_bar.slideUp()
    });
+
+   // catch clipboard event in order to check if inside the clipboard there is an image
+   // if so call the uploader and upload the image
+   ['paste'].forEach(function(event) {
+    document.addEventListener(event, function(e) {
+        //get pasted elements
+        var items = (e.clipboardData  || e.originalEvent.clipboardData).items;
+        // find pasted image among pasted items
+        var blob = null;
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf("image") === 0) {
+            blob = items[i].getAsFile();
+          }
+        }
+        // pass the blob, if not null, to the uploader
+        if (blob !== null) {
+          // remove the pending files
+          uploader.files.forEach(function(file){
+            uploader.removeFile(file)
+          })
+          uploader.addFile(blob)
+        } 
+    });
+
+});
+     
 })
+
+
+
+     
