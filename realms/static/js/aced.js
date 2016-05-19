@@ -237,7 +237,7 @@ function Aced(settings) {
     // Set the scroll position of the preview pane to match.  jQuery will
     // gracefully handle out-of-bounds values.
 
-    previewWrapper.scrollTop(scrollFactor * previewScrollRange);
+    //previewWrapper.scrollTop(scrollFactor * previewScrollRange);
   }
 
   function asyncLoad(filename, cb) {
