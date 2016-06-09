@@ -165,7 +165,7 @@ def _build_sidebar(path = ""):
             # if we would take the last the result will be '')
             name = item["name"].split('/')[-2]
             # append the home keyword in order to redirect the user at tjhehomepage of the chosen subdir
-            link = "/" + item["name"] + "home"
+            link = "/_index/" + item["name"]
         # if we are analyzing a file
         else:
             # the name i simly the last word after the last "/""
