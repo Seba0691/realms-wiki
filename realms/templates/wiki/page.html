@@ -16,6 +16,9 @@
         {% if item.name == "Back" %}
           <i class="fa fa-arrow-circle-left"></i>
         {% endif %}
+        {% if item.dir %}
+          <i class="fa fa-folder-open-o" aria-hidden="true"></i>
+        {% endif %}
       {{ item.name }}
     </a>
   {% endfor %}
