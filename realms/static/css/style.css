@@ -442,7 +442,7 @@ a.label {
 
 
 .overflow-y-scroll{
-  max-height: 95vh;
+  max-height: 90vh;
   overflow: scroll;
 }
 
