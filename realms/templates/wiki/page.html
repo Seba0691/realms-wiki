@@ -1,5 +1,15 @@
 {% extends 'layout_page.html' %}
 
+{% block breadcrumb %}
+  {% for item in breadcrumb %}
+    {% if not item.active%}
+          <li><a href={{ item.link }}>{{ item.name }}</a></li>
+    {% else %}
+          <li class="active">{{ item.name }}</li>
+    {% endif %}
+  {% endfor %}
+{% endblock %}
+
 {% block sidebar %}
   {% for item in sidebar %}
     <a class="item" href="{{ item.link }}">

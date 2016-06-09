@@ -169,7 +169,25 @@ def _build_sidebar(path = ""):
             name = item["name"].split('/')[-1]
             link = "/" + item["name"]          
         sidebar.append(dict(name = name, dir = item['dir'], link = link))
-    return sidebar      
+    return sidebar   
+
+# Build the proper breadcrumb for the current page (wiki page only)
+def _build_breadcrumb(rel_url = ""):
+    parts = rel_url.split("/")
+    # start the breadcrumb always from the homepage
+    breadcrumb = [dict(name="Home", link="/", active=False)]
+    i = 1
+    # build the correct element based on the level of innest
+    for part in parts:
+        # we have to go back in the hierarchy of the directory exactly (len(parts) - current_hierarchy_level)
+        link = "../" * (len(parts) - i)
+        # mark all the element except the last one as "not active"
+        if i < (len(parts)):
+            breadcrumb.append(dict(name=part, link=link, active=False))
+        else:
+            breadcrumb.append(dict(name=part, link=rel_url, active=True))
+        i += 1
+    return breadcrumb
 
 def _image_management(content):
     # get the image which have "uploadstmp" in the path (the images that has to be moves)
@@ -356,11 +374,13 @@ def page(name):
     # get the path to the current file without its name
     if '/' in cname:
         path = cname[:cname.rfind("/")]
-    # buil the sidebar for the retreived path
+    # build the sidebar for the retreived path
     sidebar = _build_sidebar(path=path)
+    # build the breadcrumb for the current page
+    breadcrumb = _build_breadcrumb(rel_url=cname)
 
     if data:
-        return render_template('wiki/page.html', name=cname, page=data, sidebar=sidebar, partials=data.get('partials'), path=path)
+        return render_template('wiki/page.html', name=cname, page=data, sidebar=sidebar, breadcrumb=breadcrumb, partials=data.get('partials'), path=path)
     else:
          abort(404)
 
