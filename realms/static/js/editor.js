@@ -254,6 +254,21 @@ uploader.bind('FilesAdded', function(up, files) {
    } 
 });
 
+// insert a tag "strong" with the selected color in the editor to highligth some sentence
+//
+// If we previously select some text, this text will be highligted automatically
+function highlight(color){
+  text = aced.editor.getSelectedText()
+  // if we have selected spome text then surrond it with strong tag to highlight it without rewrite the text
+  if(text !== ''){
+    aced.editor.insert("<strong style='color:" + color + "'>" + text + "</strong>")
+  }
+  // otherwise insert an empty tag
+  else{
+    aced.editor.insert("<strong style='color:" + color + "'></strong>")
+  }
+  return false
+}
 
 
 $(document).ready(function(){

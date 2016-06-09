@@ -446,6 +446,21 @@ a.label {
   overflow: scroll;
 }
 
+.highlight-buttons{
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.highlight-buttons>a{
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.bold-label{
+    font-size: 15px;
+    font-weight: 700;
+}
+
 @media (max-width:1000px) {
   .ace_content {
     padding: 3px;

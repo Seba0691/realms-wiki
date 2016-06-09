@@ -58,6 +58,14 @@
 
       <div class="col-md-6 col-xs-4 text-right">
 
+        <span class='bold-label'>Highligth : </span>
+
+        <div class="btn-group highlight-buttons">
+            <a class="btn btn-default" style="background-color: red; border-color: red;" onclick="highlight('red')" ></a>
+            <a class="btn btn-default" style="background-color: blue; border-color: blue;" onclick="highlight('blue')"></a>
+            <a class="btn btn-default" style="background-color: yellowgreen; border-color: yellowgreen;" onclick="highlight('yellowgreen')"></a>
+        </div>
+
         {% if config.get('COLLABORATION') %}
           <div class="btn-group">
             <button style='display:none' class="btn btn-danger btn-sm" id="end-collaboration">
@@ -148,6 +156,8 @@
             </a>
           {% endif %}
         </div>
+
+
 
       </div>
     </div>
