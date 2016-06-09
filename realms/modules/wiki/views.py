@@ -151,7 +151,10 @@ def _build_sidebar(path = ""):
     if path:
         path = to_canonical(path) + "/"
     # append always as first element the back link (go up by one level of directory)
-    sidebar = [ dict(name = 'Back', dir = False, link = "../home") ]
+    parts = path.split("/")
+    # build the link for the back button in the sidebar
+    back_link = "/_index/" + "/".join( parts[0:(len(parts) - 2)] )
+    sidebar = [ dict(name = 'Back', dir = False, link = back_link) ]
     # get the tree for the current directory (the files belonging to the current subdir plus the subdir of level 1)
     for item in _tree_index(items, path=path):
         name = ''
@@ -180,7 +183,7 @@ def _build_breadcrumb(rel_url = ""):
     # build the correct element based on the level of innest
     for part in parts:
         # we have to go back in the hierarchy of the directory exactly (len(parts) - current_hierarchy_level)
-        link = "../" * (len(parts) - i)
+        link = "/_index/" + "/".join(parts[0:i])
         # mark all the element except the last one as "not active"
         if i < (len(parts)):
             breadcrumb.append(dict(name=part, link=link, active=False))
