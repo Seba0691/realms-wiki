@@ -87,7 +87,7 @@
         {% block sidebar %}{% endblock %}
       </div>
 
-      <div class="col-sm-8 left-sidebar">
+      <div class="col-sm-8 left-sidebar overflow-y-scroll">
         <div id="main-body" class="ui basic segment">
              {% with messages = get_flashed_messages(with_categories=True) %}
               {% if messages %}

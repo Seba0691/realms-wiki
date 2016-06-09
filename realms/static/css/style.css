@@ -440,6 +440,12 @@ a.label {
     border-left: 1px solid #3be6c4;
 }
 
+
+.overflow-y-scroll{
+  max-height: 95vh;
+  overflow: scroll;
+}
+
 @media (max-width:1000px) {
   .ace_content {
     padding: 3px;

@@ -157,9 +157,9 @@ WIKI_PATH = '/tmp/wiki'
 WIKI_HOME = 'home'
 
 AUTH_LOCAL_ENABLE = True
-ALLOW_ANON = False
+ALLOW_ANON = True
 REGISTRATION_ENABLED = True
-PRIVATE_WIKI = True
+PRIVATE_WIKI = False
 
 # None, firepad, and/or togetherjs
 COLLABORATION = 'togetherjs'
